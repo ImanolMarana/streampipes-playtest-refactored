@@ -1,0 +1,31 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+org.apache.streampipes.sinks.notifications.jvm.slack.title=Slack Notification
+org.apache.streampipes.sinks.notifications.jvm.slack.description=Slack bot to send notifications to Slack
+
+receiver.title=Send to
+receiver.description=Enter the username or channel you want to notify
+
+content.title=Message
+content.description=The message that should be sent
+
+channel-type.title=User or Channel
+channel-type.description=Decide wether you want to sent a notification to a user or to a channel
+
+auth-token.title=Auth Token
+auth-token.description=The token to authenticate at Slack

@@ -1,0 +1,253 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column" class="small-form-field-density">
+    <div
+        fxFlex="100"
+        fxLayout="column"
+        class="static-property-panel"
+        [ngClass]="showBorder ? 'static-property-panel-border' : ''"
+    >
+        <div
+            fxFlex="100"
+            fxLayout="column"
+            style="margin-bottom: 10px"
+            *ngIf="showLabel"
+        >
+            <b>{{ staticProperty.label }}</b>
+            <mat-hint class="description">{{
+                staticProperty.description
+            }}</mat-hint>
+        </div>
+        <div fxFlex="100">
+            <sp-static-code-input
+                *ngIf="isCodeInputStaticProperty(staticProperty)"
+                [staticProperty]="staticProperty"
+                [parentForm]="parentForm"
+                [eventSchemas]="eventSchemas"
+                [fieldName]="fieldName"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-static-code-input>
+
+            <sp-app-static-secret-input
+                *ngIf="isSecretStaticProperty(staticProperty)"
+                [staticProperty]="staticProperty"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-secret-input>
+
+            <sp-app-static-free-input
+                *ngIf="isFreeTextStaticProperty(staticProperty)"
+                [staticProperty]="staticProperty"
+                [parentForm]="parentForm"
+                [eventSchemas]="eventSchemas"
+                [fieldName]="fieldName"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-free-input>
+
+            <sp-static-file-input
+                *ngIf="isFileStaticProperty(staticProperty)"
+                (inputEmitter)="valueChange($event)"
+                [staticProperty]="staticProperty"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                (updateEmitter)="emitUpdate($event)"
+                [adapterId]="adapterId"
+            >
+            </sp-static-file-input>
+
+            <sp-app-static-color-picker
+                *ngIf="isColorPickerStaticProperty(staticProperty)"
+                [staticProperty]="staticProperty"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-color-picker>
+
+            <sp-app-static-runtime-resolvable-any-input
+                *ngIf="isRuntimeResolvableAnyStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [staticProperty]="staticProperty"
+                [staticProperties]="staticProperties"
+                [eventSchemas]="eventSchemas"
+                [pipelineElement]="pipelineElement"
+                [parentForm]="parentForm"
+                [completedStaticProperty]="completedStaticProperty"
+                [adapterId]="adapterId"
+            >
+            </sp-app-static-runtime-resolvable-any-input>
+
+            <sp-app-static-runtime-resolvable-oneof-input
+                *ngIf="isRuntimeResolvableOneOfStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [completedStaticProperty]="completedStaticProperty"
+                [pipelineElement]="pipelineElement"
+                [eventSchemas]="eventSchemas"
+                [staticProperty]="staticProperty"
+                [parentForm]="parentForm"
+                [staticProperties]="staticProperties"
+                [adapterId]="adapterId"
+                (updateEmitter)="emitUpdate($event)"
+            ></sp-app-static-runtime-resolvable-oneof-input>
+
+            <sp-app-static-any-input
+                *ngIf="
+                    isAnyStaticProperty(staticProperty) &&
+                    !isRuntimeResolvableAnyStaticProperty(staticProperty)
+                "
+                (inputEmitter)="valueChange($event)"
+                [fieldName]="fieldName"
+                [staticProperty]="staticProperty"
+            >
+            </sp-app-static-any-input>
+
+            <sp-static-one-of-input
+                *ngIf="
+                    isOneOfStaticProperty(staticProperty) &&
+                    !isRuntimeResolvableOneOfStaticProperty(staticProperty)
+                "
+                (inputEmitter)="valueChange($event)"
+                (updateEmitter)="emitUpdate($event)"
+                [parentForm]="parentForm"
+                [staticProperty]="staticProperty"
+            >
+            </sp-static-one-of-input>
+
+            <sp-app-static-mapping-unary
+                *ngIf="isMappingPropertyUnary(staticProperty)"
+                [eventSchemas]="eventSchemas"
+                [staticProperty]="staticProperty"
+                [displayRecommended]="displayRecommended"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                (inputEmitter)="valueChange($event)"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-mapping-unary>
+
+            <sp-app-static-mapping-nary
+                *ngIf="isMappingNaryProperty(staticProperty)"
+                [eventSchemas]="eventSchemas"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                [staticProperty]="staticProperty"
+                [displayRecommended]="displayRecommended"
+                (inputEmitter)="valueChange($event)"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-mapping-nary>
+
+            <sp-app-static-alternatives
+                *ngIf="isAlternativesStaticProperty(staticProperty)"
+                [adapterId]="adapterId"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [eventSchemas]="eventSchemas"
+                [parentForm]="parentForm"
+                [staticProperty]="staticProperty"
+                [staticProperties]="staticProperties"
+                [displayRecommended]="displayRecommended"
+                class="test fullWidth"
+                (inputEmitter)="valueChange($event)"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-alternatives>
+
+            <sp-app-static-group
+                *ngIf="
+                    isGroupStaticProperty(staticProperty) &&
+                    !isRuntimeResolvableGroupStaticProperty(staticProperty)
+                "
+                [adapterId]="adapterId"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [eventSchemas]="eventSchemas"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                [staticProperty]="staticProperty"
+                [staticProperties]="staticProperties"
+                [displayRecommended]="displayRecommended"
+                class="test fullWidth"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-group>
+
+            <sp-app-static-runtime-resolvable-group
+                *ngIf="isRuntimeResolvableGroupStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [adapterId]="adapterId"
+                [eventSchemas]="eventSchemas"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                [staticProperties]="staticProperties"
+                [staticProperty]="staticProperty"
+                [completedStaticProperty]="completedStaticProperty"
+                [displayRecommended]="displayRecommended"
+                class="test fullWidth"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-app-static-runtime-resolvable-group>
+
+            <sp-static-collection
+                *ngIf="isCollectionStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [adapterId]="adapterId"
+                [eventSchemas]="eventSchemas"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                [displayRecommended]="displayRecommended"
+                [staticProperty]="staticProperty"
+                class="test fullWidth"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-static-collection>
+
+            <sp-static-slide-toggle
+                *ngIf="isSlideToggleStaticProperty(staticProperty)"
+                [adapterId]="adapterId"
+                [parentForm]="parentForm"
+                [fieldName]="fieldName"
+                [displayRecommended]="displayRecommended"
+                [staticProperty]="staticProperty"
+                class="test fullWidth"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-static-slide-toggle>
+            <sp-runtime-resolvable-tree-input
+                *ngIf="isTreeInputStaticProperty(staticProperty)"
+                [deploymentConfiguration]="deploymentConfiguration"
+                [adapterId]="adapterId"
+                [parentForm]="parentForm"
+                [completedStaticProperty]="completedStaticProperty"
+                [pipelineElement]="pipelineElement"
+                [eventSchemas]="eventSchemas"
+                [staticProperties]="staticProperties"
+                [fieldName]="fieldName"
+                [displayRecommended]="displayRecommended"
+                [staticProperty]="staticProperty"
+                class="test fullWidth"
+                (updateEmitter)="emitUpdate($event)"
+            >
+            </sp-runtime-resolvable-tree-input>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+</div>

@@ -1,0 +1,201 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: PR validation
+
+on:
+  pull_request:
+
+jobs:
+  run-rat-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Validate java code
+        run: mvn clean verify
+
+  run-format-and-lint-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./ui
+        run: |
+          npm install
+
+      - name: Format and Lint all files
+        working-directory: ./ui
+        run: |
+          npm run format
+          npm run lint
+
+  run-cypress-e2e-tests:
+    runs-on: ubuntu-latest
+    needs: [python-quality-checks, python-unit-tests, run-format-and-lint-ui]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install NPM dependencies
+        working-directory: ./ui
+        run: |
+          npm install
+
+      - name: Build UI
+        working-directory: ./ui
+        run: |
+          npm run build
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Build and run streampipes
+        run: docker-compose up --build -d
+
+      - name: Wait 70 seconds
+        working-directory: ./installer/compose
+        run: sleep 70
+
+      - name: 'UI Tests'
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          wait-on: 'http://localhost/#/login'
+          wait-on-timeout: 120
+          spec: cypress/tests/**/*.smoke.spec.ts
+          working-directory: ui
+
+  python-quality-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
+        run: |
+          poetry install --with dev,stubs --all-extras
+
+      - name: Run style & code checks
+        working-directory: ./streampipes-client-python
+        run: |
+          make pre-commit
+
+  python-unit-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [3.8, 3.9, "3.10", "3.11"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python v${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
+        run: |
+          poetry install --with dev,stubs --all-extras
+
+      - name: Run unit-tests
+        working-directory: ./streampipes-client-python
+        run: |
+          source $VENV  # see https://github.com/snok/install-poetry#running-on-windows
+          make unit-tests
+
+  python-doc-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
+
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.5.1
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install Python dependencies
+        working-directory: ./streampipes-client-python
+        run: |
+          poetry install --with docs
+
+      - name: Build MkDocs
+        working-directory: ./streampipes-client-python
+        run: |
+          make doc

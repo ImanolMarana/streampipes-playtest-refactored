@@ -1,0 +1,116 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+@import '../../../../scss/_variables.scss';
+
+.menu-text-color {
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+}
+
+.icon-stand {
+    max-height: calc(100vh - 148px);
+    overflow-y: auto;
+    margin-top: 5px;
+}
+
+.border {
+    border: 1px solid var(--color-bg-3);
+}
+
+.pe-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+.pe-row:nth-child(even) {
+    background-color: var(--color-bg-1);
+}
+
+.pe-row:nth-child(odd) {
+    background-color: var(--color-bg-0);
+}
+
+.pe-row:hover {
+    background-color: var(--color-bg-2);
+    cursor: pointer;
+}
+
+.panel-header {
+    padding: 3px;
+}
+
+.panel-title {
+    font-weight: 400;
+    padding-left: 5px;
+}
+
+.panel-options {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.panel-content {
+    margin-top: 10px;
+}
+
+.sort-selected {
+    padding: 3px;
+    background: var(--color-accent);
+    color: white;
+}
+
+.sort-unselected {
+    padding: 3px;
+    color: var(--color-accent);
+}
+
+.panel-outer {
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0px;
+    border-right: 1px solid var(--color-bg-3);
+    border-bottom: 1px solid var(--color-bg-3);
+    border-top: 1px solid var(--color-bg-3);
+}
+
+.search-field {
+    width: 180px;
+}
+
+.group-outer {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+.group-title {
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+    font-size: small;
+    background: var(--color-primary);
+    color: var(--color-accent);
+}
+
+.sort-option {
+    cursor: pointer;
+}

@@ -1,0 +1,216 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# lite or full (default: lite)
+deployment: lite
+preferredBroker: "nats"
+monitoringSystem: false
+pullPolicy: "Always"
+restartPolicy: Always
+persistentVolumeReclaimPolicy: "Delete"
+persistentVolumeAccessModes: "ReadWriteOnce"
+initialDelaySeconds: 60
+periodSeconds: 30
+failureThreshold: 30
+hostPath: ""
+
+streampipes:
+  version: "0.97.0-SNAPSHOT"
+  registry: "apachestreampipes"
+  auth:
+    secretName: "sp-secrets"
+    users:
+      admin:
+        user: "admin@streampipes.apache.org"
+        password: "admin"
+      service:
+        user: "sp-service-client"
+        secret:
+    encryption:
+      passcode:
+  core:
+    appName: "backend"
+    port: 8030
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "backend-pvc"
+      pvName: "backend-pv"
+    service:
+      name: "backend"
+      port: 8030
+  ui:
+    appName: "ui"
+    resolverActive: true
+    port: 8088
+    # DNS resolver when using the Nginx proxy
+    resolver: "kube-dns.kube-system.svc.cluster.local"
+    service:
+      name: "ui"
+      type: "ClusterIP"
+      nodePort: 8088
+      port: 8088
+  ingress:
+    active: false
+    annotations: {}
+    #className: ""
+    host: ""
+  # Ingressroute for running StreamPipes behind Traefik
+  ingressroute:
+    active: true
+    annotations: {}
+    entryPoints:
+      - web
+      - websecure
+    host: ""
+    certResolverActive: true
+    certResolver: ""
+
+extensions:
+  iiot:
+    appName: extensions-all-iiot
+    imageName: extensions-all-jvm
+    port: 8090
+    service:
+      name: extensions-all-iiot
+      port: 8090
+
+external:
+  couchdb:
+    appName: "couchdb"
+    version: 3.3.1
+    user: "admin"
+    password:
+    port: 5984
+    service:
+      name: "couchdb"
+      port: 5984
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "couchdb-pvc"
+      pvName: "couchdb-pv"
+  influxdb:
+    appName: "influxdb"
+    version: 2.6
+    username: "admin"
+    password: "sp-admin"
+    adminToken:
+    initOrg: "sp"
+    initBucket: "sp"
+    # For database migration in v0.91.0 - set init mode to 'upgrade' to migrate an existing installation
+    initMode: "setup"
+    apiPort: 8083
+    httpPort: 8086
+    grpcPort: 8090
+    service:
+      name: "influxdb"
+      apiPort: 8083
+      httpPort: 8086
+      grpcPort: 8090
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      storageSizeV1: "1Gi"
+      claimName: "influxdb2-pvc"
+      claimNameV1: "influxdb-pvc"
+      pvName: "influxdb2-pv"
+      pvNameV1: "influxdb-pv"
+  nats:
+    appName: "nats"
+    port: 4222
+    version:
+    service:
+      type: "NodePort"
+      externalTrafficPolicy: "Local"
+      name: "nats"
+      port: 4222
+  kafka:
+    appName: "kafka"
+    version: 2.2.0
+    port: 9092
+    external:
+      hostname: "localhost" #  Replace localhost with your external address if Kafka should be reachable from external systems.
+    service:
+      name: "kafka"
+      port: 9092
+      portOutside: 9094
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "kafka-pvc"
+      pvName: "kafka-pv"
+  zookeeper:
+    appName: "zookeeper"
+    version: 3.4.13
+    port: 2181
+    service:
+      name: "zookeeper"
+      port: 2181
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "zookeeper-pvc"
+      pvName: "zookeeper-pv"
+  pulsar:
+    appName: "pulsar"
+    version: 3.0.0
+    port: 6650
+    service:
+      name: "pulsar"
+      port: 6650
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "pulsar-pvc"
+      pvName: "pulsar-pv"
+
+
+monitoring:
+  # monitoring - prometheus
+  prometheus:
+    appName: "prometheus"
+    version: 2.45.0
+    port: 9090
+    service:
+      name: "prometheus"
+      port: 9090
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "2Gi"
+      claimName: "prometheus-pvc"
+      pvName: "prometheus-pv"
+      tokenStorageSize: "16Ki"
+    config:
+      scrapeInterval: 10s
+      evaluationInterval: 15s
+      backendJobName: backend
+      extensionsName: extensions-all-iiot
+      tokenFileName: token
+      tokenFileDir: /opt/data
+
+  # monitoring - grafana
+  grafana:
+    appName: "grafana"
+    version: 10.1.2
+    port: 3000
+    service:
+      name: "grafana"
+      port: 3000
+    persistence:
+      storageClassName: "hostpath"
+      storageSize: "1Gi"
+      claimName: "grafana-pvc"
+      pvName: "grafana-pv"

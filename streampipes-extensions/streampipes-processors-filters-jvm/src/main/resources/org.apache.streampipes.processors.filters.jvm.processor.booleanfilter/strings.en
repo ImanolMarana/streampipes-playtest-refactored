@@ -1,0 +1,27 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.title=Boolean Filter
+org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.description=Keeps events with the selected value
+
+boolean-mapping.title=Boolean Field
+boolean-mapping.description=Specifies the field name where the filter operation should be applied on.
+
+value.title=Value
+value.description=Events with the selected value are forwarded (E.g. when false, all events with value true are filtered out)
+

@@ -1,0 +1,64 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="column" class="page-container">
+    <div
+        class="fixed-height"
+        fxLayout="row"
+        fxFlex="100"
+        class="editor-container-inner"
+    >
+        <div fxFlex="250px">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                *ngIf="!allElementsLoaded"
+            >
+                <mat-spinner
+                    [diameter]="30"
+                    color="accent"
+                    mode="indeterminate"
+                ></mat-spinner>
+                <p>Loading pipeline elements...</p>
+            </div>
+            <div
+                id="shepherd-test"
+                style="
+                    padding: 0px;
+                    border-bottom: 1px solid #ffffff;
+                    margin-right: 5px;
+                "
+            >
+                <sp-pipeline-element-icon-stand
+                    [allElements]="allElements"
+                    *ngIf="allElementsLoaded"
+                >
+                </sp-pipeline-element-icon-stand>
+            </div>
+        </div>
+        <sp-pipeline-assembly
+            fxFlex="100"
+            style="margin-left: 10px"
+            [rawPipelineModel]="rawPipelineModel"
+            [allElements]="allElements"
+            [currentModifiedPipelineId]="currentModifiedPipelineId"
+        >
+        </sp-pipeline-assembly>
+    </div>
+</div>

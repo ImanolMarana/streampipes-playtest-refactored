@@ -1,0 +1,96 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.external.influxdb.appName }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.external.influxdb.appName }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.external.influxdb.appName }}
+    spec:
+      restartPolicy: {{ .Values.restartPolicy }}
+      volumes:
+        - name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.external.influxdb.persistence.claimNameV1 }}
+        - name: {{ .Values.external.influxdb.persistence.pvName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.external.influxdb.persistence.claimName }}
+      containers:
+        - name: {{ .Values.external.influxdb.appName }}
+          image: influxdb:{{ .Values.external.influxdb.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.external.influxdb.apiPort }}
+            - containerPort: {{ .Values.external.influxdb.httpPort }}
+            - containerPort: {{ .Values.external.influxdb.grpcPort }}
+          env:
+            - name: INFLUXDB_DATA_ENGINE
+              value: "tsm1"
+            - name: INFLUXDB_REPORTING_DISABLED
+              value: "false"
+            - name: INFLUXDB_ADMIN_ENABLED
+              value: "true"
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              value: {{ .Values.external.influxdb.username }}
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-ts-storage-password
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.streampipes.auth.secretName }}
+                  key: sp-ts-storage-token
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              value: {{ .Values.external.influxdb.initOrg }}
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              value: {{ .Values.external.influxdb.initBucket }}
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: {{ .Values.external.influxdb.initMode }}
+          volumeMounts:
+            - mountPath: "/var/lib/influxdb"
+              name: {{ .Values.external.influxdb.persistence.pvNameV1 }}
+            - mountPath: "/var/lib/influxdb2"
+              name: {{ .Values.external.influxdb.persistence.pvName }}
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.external.influxdb.httpPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.external.influxdb.httpPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: {{ .Values.external.influxdb.httpPort }}
+            initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+            periodSeconds: {{ .Values.periodSeconds }}
+            failureThreshold: {{ .Values.failureThreshold }}

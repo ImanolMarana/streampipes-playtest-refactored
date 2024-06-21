@@ -1,0 +1,156 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content padding-20">
+        <div fxFlex="100" fxLayout="column">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                *ngIf="!saved && !saving && !storageError"
+            >
+                <div
+                    id="overwriteCheckbox"
+                    class="checkbox"
+                    *ngIf="currentModifiedPipelineId"
+                >
+                    <mat-radio-group
+                        [(ngModel)]="updateMode"
+                        fxLayout="column"
+                        color="accent"
+                        class="pipeline-radio-group"
+                    >
+                        <mat-radio-button
+                            [value]="'update'"
+                            class="mb-10"
+                            style="padding-left: 0"
+                        >
+                            Update pipeline <b>{{ currentPipelineName }}</b>
+                        </mat-radio-button>
+                        <mat-radio-button [value]="'clone'" class="mb-10">
+                            Create new pipeline
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <form [formGroup]="submitPipelineForm">
+                    <div
+                        fxFlex="100"
+                        fxLayout="column"
+                        *ngIf="
+                            !currentModifiedPipelineId || updateMode === 'clone'
+                        "
+                    >
+                        <mat-form-field fxFlex color="accent">
+                            <mat-label>Pipeline Name</mat-label>
+                            <input
+                                [formControlName]="'pipelineName'"
+                                data-cy="sp-editor-pipeline-name"
+                                matInput
+                                name="pipelineName"
+                            />
+                        </mat-form-field>
+                        <mat-form-field fxFlex color="accent">
+                            <mat-label>Description</mat-label>
+                            <input
+                                [formControlName]="'pipelineDescription'"
+                                matInput
+                            />
+                        </mat-form-field>
+                    </div>
+                </form>
+                <mat-checkbox
+                    (click)="triggerTutorial()"
+                    [(ngModel)]="startPipelineAfterStorage"
+                    color="accent"
+                    data-cy="sp-editor-checkbox-start-immediately"
+                >
+                    Start pipeline immediately
+                </mat-checkbox>
+            </div>
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                *ngIf="saving"
+            >
+                <mat-spinner
+                    [mode]="'indeterminate'"
+                    [diameter]="50"
+                    color="accent"
+                ></mat-spinner>
+                <span class="status-text">Saving pipeline...</span>
+            </div>
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                *ngIf="saved"
+            >
+                <mat-icon
+                    color="accent"
+                    style="font-size: 50pt; height: 60px; width: 60px"
+                    >check_circle</mat-icon
+                >
+                <span class="status-text">Pipeline successfully stored.</span>
+            </div>
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayoutAlign="center center"
+                *ngIf="storageError"
+            >
+                <mat-icon
+                    color="accent"
+                    style="font-size: 50pt; height: 60px; width: 60px"
+                    >error</mat-icon
+                >
+                <span class="status-text"
+                    >Your pipeline could not be stored.</span
+                >
+                <span class="status-subtext">{{ errorMessage }}</span>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <button
+            [disabled]="!submitPipelineForm.valid || saving || saved"
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="savePipeline(false)"
+            style="margin-right: 10px"
+        >
+            Save
+        </button>
+        <button
+            [disabled]="!submitPipelineForm.valid || saving || saved"
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="savePipeline(true)"
+            style="margin-right: 10px"
+            data-cy="sp-editor-save"
+        >
+            Save and go to pipeline view
+        </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="hide()">
+            {{ saved ? 'Close' : 'Cancel' }}
+        </button>
+    </div>
+</div>

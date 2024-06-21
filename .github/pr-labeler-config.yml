@@ -1,0 +1,112 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+backend:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-*/**/*.java"
+
+connect:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-extensions/streampipes-connect-adapters/**/*"
+              - "streampipes-extensions/streampipes-connect-adapters-iiot/**/*"
+
+
+dependencies:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/pom.xml"
+              - "streampipes-client-python/poetry.lock"
+              - "ui/**/package.json"
+              - "ui/**/package-lock.json"
+
+documentation:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.md"
+              - "streampipes-client-python/docs/**/*"
+              - "streampipes-client-python/mkdocs.yml"
+
+gh-actions:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - ".github/**/*"
+
+helm:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "installer/k8s/**/*.yaml"
+
+installer:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "installer/**/*"
+
+java:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.java"
+
+javascript:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.js"
+
+'pipeline elements':
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-exensions/streampipes-extensions-*/**/*"
+              - "streampipes-extensions/streampipes-pipeline-*/**/*"
+              - "streampipes-extensions/streampipes-processors-*/**/*"
+              - "streampipes-extensions/streampipes-sinks-*/**/*"
+
+python:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.py"
+
+testing:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "streampipes-integration-tests/**/*"
+              - "streampipes-client-python/tests/**/*"
+              - "streampipes-*/**/test/**/*"
+              - "ui/cypress/**/*"
+              - "streampipes-client-go/**/*_test.go"
+
+ui:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "ui/**/*"
+
+go:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file:
+              - "**/*.go"
