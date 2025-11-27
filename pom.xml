@@ -98,7 +98,7 @@
         <nats.version>2.18.0</nats.version>
         <netty.version>4.1.72.Final</netty.version>
         <okhttp.version>3.13.1</okhttp.version>
-        <opencsv.version>5.9</opencsv.version>
+        <opencsv.version>5.12.0</opencsv.version>
         <opennlp.version>2.3.1</opennlp.version>
         <plc4x.version>0.12.0</plc4x.version>
         <plexus-component-annotations.version>2.2.0</plexus-component-annotations.version>
