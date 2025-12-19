@@ -92,7 +92,7 @@
     "@angular-eslint/schematics": "^17.3.0",
     "@angular-eslint/template-parser": "^17.3.0",
     "@angular/cli": "^17.3.3",
-    "@angular/compiler-cli": "^17.3.3",
+    "@angular/compiler-cli": "^21.0.6",
     "@types/angular": "^1.8.4",
     "@types/jasmine": "~5.1.0",
     "@types/jqueryui": "^1.12.16",
