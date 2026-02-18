@@ -71,7 +71,7 @@
     "lodash": "4.17.21",
     "marked": "^9.0.0",
     "material-icons": "^1.13.1",
-    "ngx-color-picker": "^14.0.0",
+    "ngx-color-picker": "^20.1.1",
     "ngx-echarts": "^17.1.0",
     "ngx-markdown": "17.2.0",
     "ngx-quill": "^24.0.4",
