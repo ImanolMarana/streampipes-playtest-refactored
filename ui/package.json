@@ -58,7 +58,7 @@
     "d3-contour": "^4.0.2",
     "dagre": "0.8.5",
     "date-fns": "^3.6.0",
-    "echarts": "^5.5.0",
+    "echarts": "^6.0.0",
     "echarts-simple-transform": "^1.0.0",
     "echarts-wordcloud": "^2.1.0",
     "es-module-shims": "^1.9.0",
